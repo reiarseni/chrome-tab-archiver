@@ -34,6 +34,14 @@
   "parseError": {
     "message": "Error al parsear el JSON.",
     "description": "Alert message for JSON parsing error"
+  },
+  "toggleView": {
+    "message": "Cambiar Vista",
+    "description": "Cambiar Vista"
+  },
+  "loadTabs": {
+    "message": "Visualizar",
+    "description": "Cargar y visualizar"
   }
 }
 

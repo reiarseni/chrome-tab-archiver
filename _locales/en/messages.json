@@ -34,6 +34,13 @@
   "parseError": {
     "message": "Error parsing JSON.",
     "description": "Alert message for JSON parsing error"
+  },
+  "toggleView": {
+    "message": "Toogle View",
+    "description": "Toogle View"
+  },
+  "loadTabs": {
+    "message": "View",
+    "description": "Load in View"
   }
 }
-
