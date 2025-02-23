@@ -60,10 +60,13 @@
       display: none;
     }
     /* Table styling with stripes */
+    #tabsTableContainer {
+      position: relative;
+      margin-top: 20px;
+    }
     #tabsTableContainer table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
     }
     #tabsTableContainer table td {
       padding: 10px;
@@ -75,6 +78,20 @@
     }
     #tabsTableContainer table tr:hover {
       background-color: #f1f1f1;
+      cursor: pointer;
+    }
+    /* Delete button style */
+    .deleteBtn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      font-weight: bold;
       cursor: pointer;
     }
   </style>

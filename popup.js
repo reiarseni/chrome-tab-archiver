@@ -62,7 +62,7 @@ class TabManager {
   }
   
   /**
-   * Restores the tabs from a JSON file:
+   * Restores tabs from a JSON file:
    *  - Reads the file selected by the user.
    *  - Validates that the JSON contains the 'tabs' property.
    *  - Opens each valid URL in a new tab.
@@ -102,60 +102,114 @@ class TabManager {
 // Initialize the extension once the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
   new TabManager();
+  loadSavedTable();
 });
 
-// New code for loading saved tabs and displaying them in a table with striped rows
-document.addEventListener('DOMContentLoaded', () => {
-  const loadTabsBtn = document.getElementById('loadTabsBtn');
-  const tableFileInput = document.getElementById('tableFileInput');
-  const tabsTableContainer = document.getElementById('tabsTableContainer');
+// New functions for persisting and rendering the saved tabs table
 
-  loadTabsBtn.addEventListener('click', () => {
-    tableFileInput.click();
+/**
+ * Saves the provided tabs array to chrome storage.
+ * @param {Array} tabsArray - Array of tab objects.
+ */
+function saveTableData(tabsArray) {
+  chrome.storage.local.set({ tabsData: tabsArray }, () => {
+    console.log("Table data saved to storage.");
   });
+}
 
-  tableFileInput.addEventListener('change', (event) => {
-    const file = event.target.files[0];
-    if (!file) {
-      alert(chrome.i18n.getMessage("noFileSelected"));
-      return;
+/**
+ * Loads saved table data from chrome storage and renders the table.
+ */
+function loadSavedTable() {
+  chrome.storage.local.get("tabsData", (result) => {
+    if (result.tabsData && Array.isArray(result.tabsData)) {
+      renderTable(result.tabsData);
     }
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const data = JSON.parse(e.target.result);
-        if (!data.tabs || !Array.isArray(data.tabs)) {
-          alert(chrome.i18n.getMessage("invalidJSON"));
-          return;
-        }
-        // Clear any existing content in the container
-        tabsTableContainer.innerHTML = "";
-        // Create table element
-        const table = document.createElement("table");
-        const tbody = document.createElement("tbody");
-        data.tabs.forEach((tab, index) => {
-          const tr = document.createElement("tr");
-          const td = document.createElement("td");
-          const a = document.createElement("a");
-          a.href = "#"; // Prevent default navigation; we'll open a new tab programmatically
-          a.textContent = tab.url;
-          a.title = tab.title; // Tooltip shows the tab's title on hover
-          a.addEventListener('click', (e) => {
-            e.preventDefault();
-            chrome.tabs.create({ url: tab.url });
-          });
-          td.appendChild(a);
-          tr.appendChild(td);
-          tbody.appendChild(tr);
-        });
-        table.appendChild(tbody);
-        tabsTableContainer.appendChild(table);
-      } catch (error) {
-        console.error("Error parsing JSON:", error);
-        alert(chrome.i18n.getMessage("parseError"));
-      }
-    };
-    reader.readAsText(file);
   });
+}
+
+/**
+ * Deletes the saved table data from chrome storage.
+ */
+function deleteTableData() {
+  chrome.storage.local.remove("tabsData", () => {
+    console.log("Table data removed from storage.");
+  });
+}
+
+/**
+ * Renders a table of tabs in the #tabsTableContainer.
+ * Each row contains a clickable link that opens in a new tab and shows the tab title on hover.
+ * A delete button ("X") is added at the top-right to remove the table.
+ * @param {Array} tabsArray - Array of tab objects.
+ */
+function renderTable(tabsArray) {
+  const container = document.getElementById("tabsTableContainer");
+  container.innerHTML = ""; // Clear existing content
+
+  // Create delete button positioned at the top-right of the container
+  const deleteBtn = document.createElement("button");
+  deleteBtn.textContent = "X";
+  deleteBtn.className = "deleteBtn";
+  deleteBtn.addEventListener("click", () => {
+    container.innerHTML = "";
+    deleteTableData();
+  });
+  container.appendChild(deleteBtn);
+
+  // Create table element
+  const table = document.createElement("table");
+  const tbody = document.createElement("tbody");
+  tabsArray.forEach(tab => {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    const a = document.createElement("a");
+    a.href = "#"; // Prevent default navigation
+    a.textContent = tab.url;
+    a.title = tab.title; // Tooltip shows the tab's title on hover
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      chrome.tabs.create({ url: tab.url });
+    });
+    td.appendChild(a);
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  container.appendChild(table);
+}
+
+// New code to handle loading a table from a file and persisting it
+
+const loadTabsBtn = document.getElementById('loadTabsBtn');
+const tableFileInput = document.getElementById('tableFileInput');
+
+loadTabsBtn.addEventListener('click', () => {
+  tableFileInput.click();
+});
+
+tableFileInput.addEventListener('change', (event) => {
+  const file = event.target.files[0];
+  if (!file) {
+    alert(chrome.i18n.getMessage("noFileSelected"));
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.tabs || !Array.isArray(data.tabs)) {
+        alert(chrome.i18n.getMessage("invalidJSON"));
+        return;
+      }
+      // Render the table and persist the data
+      renderTable(data.tabs);
+      saveTableData(data.tabs);
+    } catch (error) {
+      console.error("Error parsing JSON:", error);
+      alert(chrome.i18n.getMessage("parseError"));
+    }
+  };
+  reader.readAsText(file);
 });
 
