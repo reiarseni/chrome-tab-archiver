@@ -62,7 +62,7 @@ class TabManager {
   }
   
   /**
-   * Restores tabs from a JSON file.
+   * Restores the tabs from a JSON file:
    *  - Reads the file selected by the user.
    *  - Validates that the JSON contains the 'tabs' property.
    *  - Opens each valid URL in a new tab.
@@ -102,5 +102,60 @@ class TabManager {
 // Initialize the extension once the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
   new TabManager();
+});
+
+// New code for loading saved tabs and displaying them in a table with striped rows
+document.addEventListener('DOMContentLoaded', () => {
+  const loadTabsBtn = document.getElementById('loadTabsBtn');
+  const tableFileInput = document.getElementById('tableFileInput');
+  const tabsTableContainer = document.getElementById('tabsTableContainer');
+
+  loadTabsBtn.addEventListener('click', () => {
+    tableFileInput.click();
+  });
+
+  tableFileInput.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (!file) {
+      alert(chrome.i18n.getMessage("noFileSelected"));
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (!data.tabs || !Array.isArray(data.tabs)) {
+          alert(chrome.i18n.getMessage("invalidJSON"));
+          return;
+        }
+        // Clear any existing content in the container
+        tabsTableContainer.innerHTML = "";
+        // Create table element
+        const table = document.createElement("table");
+        const tbody = document.createElement("tbody");
+        data.tabs.forEach((tab, index) => {
+          const tr = document.createElement("tr");
+          const td = document.createElement("td");
+          const a = document.createElement("a");
+          a.href = "#"; // Prevent default navigation; we'll open a new tab programmatically
+          a.textContent = tab.url;
+          a.title = tab.title; // Tooltip shows the tab's title on hover
+          a.addEventListener('click', (e) => {
+            e.preventDefault();
+            chrome.tabs.create({ url: tab.url });
+          });
+          td.appendChild(a);
+          tr.appendChild(td);
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        tabsTableContainer.appendChild(table);
+      } catch (error) {
+        console.error("Error parsing JSON:", error);
+        alert(chrome.i18n.getMessage("parseError"));
+      }
+    };
+    reader.readAsText(file);
+  });
 });
 

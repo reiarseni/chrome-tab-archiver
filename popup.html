@@ -25,7 +25,7 @@
     h2 {
       margin-bottom: 20px;
     }
-    button, label[for="fileInput"] {
+    button, label[for="fileInput"], button#loadTabsBtn {
       display: inline-block;
       width: 150px;
       padding: 10px;
@@ -49,9 +49,33 @@
     label[for="fileInput"]:hover {
       background-color: #0b7dda;
     }
-    /* Hide the file input, as we use a custom label */
+    button#loadTabsBtn {
+      background-color: #FF9800;
+    }
+    button#loadTabsBtn:hover {
+      background-color: #FB8C00;
+    }
+    /* Hide the file inputs, as we use custom labels/buttons */
     input[type="file"] {
       display: none;
+    }
+    /* Table styling with stripes */
+    #tabsTableContainer table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    #tabsTableContainer table td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    #tabsTableContainer table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    #tabsTableContainer table tr:hover {
+      background-color: #f1f1f1;
+      cursor: pointer;
     }
   </style>
   <script src="i18n.js"></script>
@@ -63,6 +87,12 @@
     <!-- The label acts as a button for restore -->
     <label for="fileInput">__MSG_restore__</label>
     <input type="file" id="fileInput" accept=".json">
+    <!-- New button for loading saved tabs -->
+    <button id="loadTabsBtn">__MSG_loadTabs__</button>
+    <!-- Hidden file input for loading tabs for table display -->
+    <input type="file" id="tableFileInput" accept=".json">
+    <!-- Container for displaying the tabs table -->
+    <div id="tabsTableContainer"></div>
   </div>
   <script src="popup.js"></script>
 </body>
