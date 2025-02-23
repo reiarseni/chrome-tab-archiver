@@ -1,0 +1,39 @@
+{
+  "extensionName": {
+    "message": "Sauvegarder et Restaurer les Onglets",
+    "description": "Extension title"
+  },
+  "extensionDescription": {
+    "message": "Sauvegardez et restaurez vos onglets ouverts dans un fichier JSON.",
+    "description": "Extension description"
+  },
+  "backup": {
+    "message": "Sauvegarder",
+    "description": "Backup button text"
+  },
+  "restore": {
+    "message": "Restaurer",
+    "description": "Restore button text"
+  },
+  "noTabsBackup": {
+    "message": "Aucun onglet ouvert à sauvegarder.",
+    "description": "Alert message when no tabs are open for backup"
+  },
+  "downloadError": {
+    "message": "Erreur lors du démarrage du téléchargement.",
+    "description": "Alert message for download error"
+  },
+  "invalidJSON": {
+    "message": "Fichier JSON invalide.",
+    "description": "Alert message when JSON file is invalid"
+  },
+  "noFileSelected": {
+    "message": "Aucun fichier sélectionné.",
+    "description": "Alert message when no file is selected"
+  },
+  "parseError": {
+    "message": "Erreur lors de l'analyse du JSON.",
+    "description": "Alert message for JSON parsing error"
+  }
+}
+

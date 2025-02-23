@@ -1,0 +1,39 @@
+{
+  "extensionName": {
+    "message": "Backup e Restauração de Abas",
+    "description": "Extension title"
+  },
+  "extensionDescription": {
+    "message": "Faça backup e restaure suas abas abertas em um arquivo JSON.",
+    "description": "Extension description"
+  },
+  "backup": {
+    "message": "Backup",
+    "description": "Backup button text"
+  },
+  "restore": {
+    "message": "Restaurar",
+    "description": "Restore button text"
+  },
+  "noTabsBackup": {
+    "message": "Nenhuma aba aberta para backup.",
+    "description": "Alert message when no tabs are open for backup"
+  },
+  "downloadError": {
+    "message": "Erro ao iniciar o download.",
+    "description": "Alert message for download error"
+  },
+  "invalidJSON": {
+    "message": "Arquivo JSON inválido.",
+    "description": "Alert message when JSON file is invalid"
+  },
+  "noFileSelected": {
+    "message": "Nenhum arquivo selecionado.",
+    "description": "Alert message when no file is selected"
+  },
+  "parseError": {
+    "message": "Erro ao analisar o JSON.",
+    "description": "Alert message for JSON parsing error"
+  }
+}
+

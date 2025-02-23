@@ -1,5 +1,5 @@
 /**
- * Clase que maneja la lógica de backup y restore de tabs.
+ * Class that handles the backup and restore logic for tabs.
  */
 class TabManager {
   constructor() {
@@ -9,7 +9,7 @@ class TabManager {
   }
   
   /**
-   * Registra los eventos de clic y cambio para los botones.
+   * Registers click and change events for the buttons.
    */
   addEventListeners() {
     this.backupBtn.addEventListener('click', () => this.backupTabs());
@@ -17,16 +17,16 @@ class TabManager {
   }
   
   /**
-   * Realiza el respaldo de los tabs abiertos:
-   *  - Consulta todos los tabs de la ventana actual.
-   *  - Crea un objeto JSON con la información de cada tab (título y URL).
-   *  - Genera un Blob y dispara la descarga del archivo JSON.
+   * Backs up the currently open tabs:
+   *  - Queries all tabs in the current window.
+   *  - Builds a JSON object with each tab's title and URL.
+   *  - Generates a Blob and triggers the JSON file download.
    */
   async backupTabs() {
-    // Consulta las pestañas abiertas en la ventana actual
+    // Query the open tabs in the current window
     chrome.tabs.query({currentWindow: true}, async (tabs) => {
       if (!tabs || tabs.length === 0) {
-        alert("No hay tabs abiertos para respaldar.");
+        alert(chrome.i18n.getMessage("noTabsBackup"));
         return;
       }
       
@@ -38,14 +38,14 @@ class TabManager {
         }))
       };
       
-      // Convierte el objeto a una cadena JSON con formato
+      // Convert the object to a formatted JSON string
       const jsonStr = JSON.stringify(backupData, null, 2);
       
-      // Crea un Blob con el contenido JSON
+      // Create a Blob with the JSON content
       const blob = new Blob([jsonStr], {type: "application/json"});
       const url = URL.createObjectURL(blob);
       
-      // Usa la API de descargas para iniciar la descarga del archivo
+      // Use the downloads API to start the file download
       chrome.downloads.download({
         url: url,
         filename: "tabs_backup.json",
@@ -53,26 +53,26 @@ class TabManager {
       }, (downloadId) => {
         if (chrome.runtime.lastError) {
           console.error(chrome.runtime.lastError);
-          alert("Error al iniciar la descarga.");
+          alert(chrome.i18n.getMessage("downloadError"));
         } else {
-          console.log("Backup iniciado, id descarga:", downloadId);
+          console.log("Backup started, download id:", downloadId);
         }
       });
     });
   }
   
   /**
-   * Restaura los tabs a partir de un archivo JSON.
-   *  - Lee el archivo seleccionado por el usuario.
-   *  - Valida que el JSON contenga la propiedad 'tabs'.
-   *  - Abre cada URL válida en una nueva pestaña.
+   * Restores tabs from a JSON file.
+   *  - Reads the file selected by the user.
+   *  - Validates that the JSON contains the 'tabs' property.
+   *  - Opens each valid URL in a new tab.
    *
-   * @param {Event} event Evento del input file.
+   * @param {Event} event File input event.
    */
   restoreTabs(event) {
     const file = event.target.files[0];
     if (!file) {
-      alert("No se seleccionó ningún archivo.");
+      alert(chrome.i18n.getMessage("noFileSelected"));
       return;
     }
     
@@ -81,25 +81,25 @@ class TabManager {
       try {
         const data = JSON.parse(e.target.result);
         if (!data.tabs || !Array.isArray(data.tabs)) {
-          alert("Archivo JSON inválido.");
+          alert(chrome.i18n.getMessage("invalidJSON"));
           return;
         }
-        // Abre cada tab validando que la URL empiece por http o https
+        // Open each tab, ensuring the URL starts with http or https
         data.tabs.forEach(tabInfo => {
           if (tabInfo.url && (tabInfo.url.startsWith("http://") || tabInfo.url.startsWith("https://"))) {
             chrome.tabs.create({ url: tabInfo.url });
           }
         });
       } catch (error) {
-        console.error("Error al parsear el JSON:", error);
-        alert("Error al parsear el JSON.");
+        console.error("Error parsing JSON:", error);
+        alert(chrome.i18n.getMessage("parseError"));
       }
     };
     reader.readAsText(file);
   }
 }
 
-// Inicializa la extensión una vez que se carga el DOM
+// Initialize the extension once the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
   new TabManager();
 });

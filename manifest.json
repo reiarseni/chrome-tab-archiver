@@ -1,15 +1,16 @@
 {
   "manifest_version": 3,
-  "name": "Backup & Restore Tabs",
-  "description": "Salva y recupera en JSON los tabs abiertos.",
+  "name": "__MSG_extensionName__",
+  "description": "__MSG_extensionDescription__",
   "version": "1.0",
+  "default_locale": "en",
   "permissions": [
     "tabs",
     "downloads"
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Backup/Restore Tabs"
+    "default_title": "__MSG_extensionName__"
   }
 }
 

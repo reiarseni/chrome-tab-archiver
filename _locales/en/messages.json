@@ -1,0 +1,39 @@
+{
+  "extensionName": {
+    "message": "Backup & Restore Tabs",
+    "description": "Extension title"
+  },
+  "extensionDescription": {
+    "message": "Backup and restore your open tabs as a JSON file.",
+    "description": "Extension description"
+  },
+  "backup": {
+    "message": "Backup",
+    "description": "Backup button text"
+  },
+  "restore": {
+    "message": "Restore",
+    "description": "Restore button text"
+  },
+  "noTabsBackup": {
+    "message": "No open tabs to backup.",
+    "description": "Alert message when no tabs are open for backup"
+  },
+  "downloadError": {
+    "message": "Error starting download.",
+    "description": "Alert message for download error"
+  },
+  "invalidJSON": {
+    "message": "Invalid JSON file.",
+    "description": "Alert message when JSON file is invalid"
+  },
+  "noFileSelected": {
+    "message": "No file selected.",
+    "description": "Alert message when no file is selected"
+  },
+  "parseError": {
+    "message": "Error parsing JSON.",
+    "description": "Alert message for JSON parsing error"
+  }
+}
+
