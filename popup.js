@@ -267,6 +267,10 @@ tableFileInput.addEventListener('change', (event) => {
   reader.onload = (e) => {
     try {
       const data = JSON.parse(e.target.result);
+
+      e.preventDefault();
+      e.stopPropagation();
+
       if (!data.tabs || !Array.isArray(data.tabs)) {
         alert(chrome.i18n.getMessage("invalidJSON"));
         return;
@@ -276,16 +280,18 @@ tableFileInput.addEventListener('change', (event) => {
         console.log("Table title saved.");
       });
       // Render the table and persist the data
-      renderTable(data.tabs, file.name);
+      //renderTable(data.tabs, file.name);
       saveTableData(data.tabs);
       // Automatically switch to table view
       const optionsContainer = document.getElementById("optionsContainer");
       const tableContainer = document.getElementById("tabsTableContainer");
-      optionsContainer.classList.remove("visible");
-      optionsContainer.classList.add("hidden");
-      tableContainer.classList.remove("hidden");
-      tableContainer.classList.add("visible");
-      document.getElementById("toggleViewBtn").style.display = "inline-block";
+      //optionsContainer.classList.remove("visible");
+      //optionsContainer.classList.add("hidden");
+      //tableContainer.classList.remove("hidden");
+      //tableContainer.classList.add("visible");
+      
+      //document.getElementById("toggleViewBtn").style.display = "inline-block";
+      
     } catch (error) {
       console.error("Error parsing JSON:", error);
       alert(chrome.i18n.getMessage("parseError"));

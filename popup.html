@@ -16,12 +16,12 @@
     .container {
       text-align: center;
       background: white;
-      padding: 20px;
+      padding: 10px;
       border-radius: 8px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     h2 {
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     button, label[for="fileInput"], button#loadTabsBtn, button#toggleViewBtn {
       display: inline-block;
@@ -55,9 +55,11 @@
     }
     button#toggleViewBtn {
       background-color: #9C27B0;
+      margin: 5px;
     }
     button#toggleViewBtn:hover {
       background-color: #7B1FA2;
+      margin: 5px;
     }
     /* Hide the file inputs, as we use custom labels/buttons */
     input[type="file"] {
@@ -99,7 +101,9 @@
     /* Transition styles for view containers */
     .view {
       transition: opacity 0.3s ease, transform 0.3s ease;
-      min-height: 300px;
+      text-align: center;
+      min-height: 120px;
+      margin-bottom: 30px;
     }
     .hidden {
       opacity: 0;
@@ -124,8 +128,9 @@
 </head>
 <body>
   <div class="container">
+    
     <h2 id="title">__MSG_extensionName__</h2>
-    <button id="toggleViewBtn" style="display:none;">__MSG_toggleView__</button>
+    
     <div id="optionsContainer" class="view visible">
       <button id="backupBtn">__MSG_backup__</button>
       <label for="fileInput">__MSG_restore__</label>
@@ -133,6 +138,9 @@
       <button id="loadTabsBtn">__MSG_loadTabs__</button>
       <input type="file" id="tableFileInput" accept=".json">
     </div>
+
+    <button id="toggleViewBtn" style="display:none;">__MSG_toggleView__</button>
+
     <div id="tabsTableContainer" class="view hidden"></div>
   </div>
   <script src="popup.js"></script>
