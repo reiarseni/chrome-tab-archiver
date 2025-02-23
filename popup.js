@@ -1,4 +1,20 @@
 /**
+ * Helper function to format a Date object in a user-friendly way.
+ * Format: YYYY-MM-DD_HH-mm-ss
+ * @param {Date} date 
+ * @returns {string}
+ */
+function formatDate(date) {
+  const year = date.getFullYear();
+  const month = ('0' + (date.getMonth() + 1)).slice(-2);
+  const day = ('0' + date.getDate()).slice(-2);
+  const hours = ('0' + date.getHours()).slice(-2);
+  const minutes = ('0' + date.getMinutes()).slice(-2);
+  const seconds = ('0' + date.getSeconds()).slice(-2);
+  return `${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
+}
+
+/**
  * Class that handles the backup and restore logic for tabs.
  */
 class TabManager {
@@ -19,19 +35,23 @@ class TabManager {
   /**
    * Backs up the currently open tabs:
    *  - Queries all tabs in the current window.
-   *  - Builds a JSON object with each tab's title and URL.
-   *  - Generates a Blob and triggers the JSON file download.
+   *  - Builds a JSON object with each tab's title and URL, including a timestamp.
+   *  - Generates a Blob and triggers the JSON file download with the timestamp in the filename.
    */
   async backupTabs() {
     // Query the open tabs in the current window
-    chrome.tabs.query({currentWindow: true}, async (tabs) => {
+    chrome.tabs.query({ currentWindow: true }, async (tabs) => {
       if (!tabs || tabs.length === 0) {
         alert(chrome.i18n.getMessage("noTabsBackup"));
         return;
       }
       
-      // Build backup object with tab information
+      const now = new Date();
+      const formattedDate = formatDate(now);
+      
+      // Build backup object with tab information and timestamp
       const backupData = {
+        timestamp: now.toLocaleString(),
         tabs: tabs.map(tab => ({
           title: tab.title,
           url: tab.url
@@ -42,13 +62,13 @@ class TabManager {
       const jsonStr = JSON.stringify(backupData, null, 2);
       
       // Create a Blob with the JSON content
-      const blob = new Blob([jsonStr], {type: "application/json"});
+      const blob = new Blob([jsonStr], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       
-      // Use the downloads API to start the file download
+      // Use the downloads API to start the file download with timestamp in filename
       chrome.downloads.download({
         url: url,
-        filename: "tabs_backup.json",
+        filename: `tabs_backup_${formattedDate}.json`,
         saveAs: true
       }, (downloadId) => {
         if (chrome.runtime.lastError) {
@@ -62,7 +82,7 @@ class TabManager {
   }
   
   /**
-   * Restores tabs from a JSON file:
+   * Restores tabs from a JSON file.
    *  - Reads the file selected by the user.
    *  - Validates that the JSON contains the 'tabs' property.
    *  - Opens each valid URL in a new tab.
@@ -84,7 +104,7 @@ class TabManager {
           alert(chrome.i18n.getMessage("invalidJSON"));
           return;
         }
-        // Open each tab, ensuring the URL starts with http or https
+        // Open each tab valid URL in a new tab
         data.tabs.forEach(tabInfo => {
           if (tabInfo.url && (tabInfo.url.startsWith("http://") || tabInfo.url.startsWith("https://"))) {
             chrome.tabs.create({ url: tabInfo.url });
@@ -139,7 +159,7 @@ function deleteTableData() {
 
 /**
  * Renders a table of tabs in the #tabsTableContainer.
- * Each row contains a clickable link that opens in a new tab and shows the tab title on hover.
+ * Each row contains a clickable link that opens in a new tab and shows the tab title as a tooltip on hover.
  * A delete button ("X") is added at the top-right to remove the table.
  * @param {Array} tabsArray - Array of tab objects.
  */
@@ -164,7 +184,7 @@ function renderTable(tabsArray) {
     const tr = document.createElement("tr");
     const td = document.createElement("td");
     const a = document.createElement("a");
-    a.href = "#"; // Prevent default navigation
+    a.href = "#"; // Prevent default navigation; we'll open a new tab programmatically
     a.textContent = tab.url;
     a.title = tab.title; // Tooltip shows the tab's title on hover
     a.addEventListener("click", (e) => {
