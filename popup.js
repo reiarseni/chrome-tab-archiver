@@ -123,6 +123,20 @@ class TabManager {
 document.addEventListener('DOMContentLoaded', () => {
   new TabManager();
   loadSavedTable();
+
+  // Toggle view between options and table
+  const toggleViewBtn = document.getElementById("toggleViewBtn");
+  toggleViewBtn.addEventListener("click", () => {
+    const options = document.getElementById("optionsContainer");
+    const tableContainer = document.getElementById("tabsTableContainer");
+    if (options.style.display === "none") {
+      options.style.display = "block";
+      tableContainer.style.display = "none";
+    } else {
+      options.style.display = "none";
+      tableContainer.style.display = "block";
+    }
+  });
 });
 
 // New functions for persisting and rendering the saved tabs table
@@ -141,9 +155,9 @@ function saveTableData(tabsArray) {
  * Loads saved table data from chrome storage and renders the table.
  */
 function loadSavedTable() {
-  chrome.storage.local.get("tabsData", (result) => {
+  chrome.storage.local.get(["tabsData", "tableTitle"], (result) => {
     if (result.tabsData && Array.isArray(result.tabsData)) {
-      renderTable(result.tabsData);
+      renderTable(result.tabsData, result.tableTitle);
     }
   });
 }
@@ -152,7 +166,7 @@ function loadSavedTable() {
  * Deletes the saved table data from chrome storage.
  */
 function deleteTableData() {
-  chrome.storage.local.remove("tabsData", () => {
+  chrome.storage.local.remove(["tabsData", "tableTitle"], () => {
     console.log("Table data removed from storage.");
   });
 }
@@ -162,10 +176,18 @@ function deleteTableData() {
  * Each row contains a clickable link that opens in a new tab and shows the tab title as a tooltip on hover.
  * A delete button ("X") is added at the top-right to remove the table.
  * @param {Array} tabsArray - Array of tab objects.
+ * @param {string} fileTitle - Title of the loaded file.
  */
-function renderTable(tabsArray) {
+function renderTable(tabsArray, fileTitle) {
   const container = document.getElementById("tabsTableContainer");
   container.innerHTML = ""; // Clear existing content
+
+  // If fileTitle is provided, create an h2 element for the title.
+  if (fileTitle) {
+    const titleEl = document.createElement("h2");
+    titleEl.textContent = fileTitle;
+    container.appendChild(titleEl);
+  }
 
   // Create delete button positioned at the top-right of the container
   const deleteBtn = document.createElement("button");
@@ -222,8 +244,12 @@ tableFileInput.addEventListener('change', (event) => {
         alert(chrome.i18n.getMessage("invalidJSON"));
         return;
       }
+      // Save the file name to storage as tableTitle
+      chrome.storage.local.set({ tableTitle: file.name }, () => {
+        console.log("Table title saved.");
+      });
       // Render the table and persist the data
-      renderTable(data.tabs);
+      renderTable(data.tabs, file.name);
       saveTableData(data.tabs);
     } catch (error) {
       console.error("Error parsing JSON:", error);
@@ -232,4 +258,3 @@ tableFileInput.addEventListener('change', (event) => {
   };
   reader.readAsText(file);
 });
-

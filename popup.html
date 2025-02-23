@@ -25,7 +25,7 @@
     h2 {
       margin-bottom: 20px;
     }
-    button, label[for="fileInput"], button#loadTabsBtn {
+    button, label[for="fileInput"], button#loadTabsBtn, button#toggleViewBtn {
       display: inline-block;
       width: 150px;
       padding: 10px;
@@ -55,6 +55,12 @@
     button#loadTabsBtn:hover {
       background-color: #FB8C00;
     }
+    button#toggleViewBtn {
+      background-color: #9C27B0;
+    }
+    button#toggleViewBtn:hover {
+      background-color: #7B1FA2;
+    }
     /* Hide the file inputs, as we use custom labels/buttons */
     input[type="file"] {
       display: none;
@@ -63,6 +69,7 @@
     #tabsTableContainer {
       position: relative;
       margin-top: 20px;
+      display: none;
     }
     #tabsTableContainer table {
       width: 100%;
@@ -100,18 +107,16 @@
 <body>
   <div class="container">
     <h2 id="title">__MSG_extensionName__</h2>
-    <button id="backupBtn">__MSG_backup__</button>
-    <!-- The label acts as a button for restore -->
-    <label for="fileInput">__MSG_restore__</label>
-    <input type="file" id="fileInput" accept=".json">
-    <!-- New button for loading saved tabs -->
-    <button id="loadTabsBtn">__MSG_loadTabs__</button>
-    <!-- Hidden file input for loading tabs for table display -->
-    <input type="file" id="tableFileInput" accept=".json">
-    <!-- Container for displaying the tabs table -->
+    <button id="toggleViewBtn">__MSG_toggleView__</button>
+    <div id="optionsContainer">
+      <button id="backupBtn">__MSG_backup__</button>
+      <label for="fileInput">__MSG_restore__</label>
+      <input type="file" id="fileInput" accept=".json">
+      <button id="loadTabsBtn">__MSG_loadTabs__</button>
+      <input type="file" id="tableFileInput" accept=".json">
+    </div>
     <div id="tabsTableContainer"></div>
   </div>
   <script src="popup.js"></script>
 </body>
 </html>
-
