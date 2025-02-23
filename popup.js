@@ -213,6 +213,16 @@ function renderTable(tabsArray, fileTitle) {
   deleteBtn.addEventListener("click", () => {
     container.innerHTML = "";
     deleteTableData();
+
+    // Switch to options view
+    const options = document.getElementById("optionsContainer");
+    const tableContainer = document.getElementById("tabsTableContainer");
+    tableContainer.classList.remove("visible");
+    tableContainer.classList.add("hidden");
+    options.classList.remove("hidden");
+    options.classList.add("visible");
+    toggleViewBtn.style.display = "none";
+
   });
   container.appendChild(deleteBtn);
 
