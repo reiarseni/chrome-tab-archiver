@@ -68,7 +68,7 @@ class TabManager {
       // Use the downloads API to start the file download with timestamp in filename
       chrome.downloads.download({
         url: url,
-        filename: `tabs_backup_${formattedDate}.json`,
+        filename: `chrome_tabs_backup_${formattedDate}.json`,
         saveAs: true
       }, (downloadId) => {
         if (chrome.runtime.lastError) {
