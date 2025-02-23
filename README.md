@@ -12,9 +12,11 @@ Chrome Tab Archiver is a Manifest V3 Chrome extension that enables users to back
 ## Installation
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/reiarseni/chrome-tab-archiver.git
    ```
+
 2. Open Chrome and navigate to `chrome://extensions/`.
 3. Enable **Developer Mode** in the top-right corner.
 4. Click on **Load unpacked** and select the project folder.

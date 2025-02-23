@@ -14,6 +14,13 @@ function formatDate(date) {
   return `${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
 }
 
+function truncateString(str, len) {
+  if (str.length > len) {
+    return str.slice(0, len) + '...';
+  }
+  return str;
+}
+
 /**
  * Class that handles the backup and restore logic for tabs.
  */
@@ -217,7 +224,7 @@ function renderTable(tabsArray, fileTitle) {
     const td = document.createElement("td");
     const a = document.createElement("a");
     a.href = "#"; // Prevent default navigation; we'll open a new tab programmatically
-    a.textContent = tab.url;
+    a.textContent = truncateString(tab.url, 100);
     a.title = tab.title; // Tooltip shows the tab's title on hover
     a.addEventListener("click", (e) => {
       e.preventDefault();
