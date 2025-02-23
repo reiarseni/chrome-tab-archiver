@@ -6,7 +6,8 @@
   "default_locale": "en",
   "permissions": [
     "tabs",
-    "downloads"
+    "downloads",
+    "storage"
   ],
   "action": {
     "default_popup": "popup.html",
