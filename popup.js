@@ -124,17 +124,23 @@ document.addEventListener('DOMContentLoaded', () => {
   new TabManager();
   loadSavedTable();
 
-  // Toggle view between options and table
+  // Toggle view between options and table with transitions
   const toggleViewBtn = document.getElementById("toggleViewBtn");
   toggleViewBtn.addEventListener("click", () => {
     const options = document.getElementById("optionsContainer");
     const tableContainer = document.getElementById("tabsTableContainer");
-    if (options.style.display === "none") {
-      options.style.display = "block";
-      tableContainer.style.display = "none";
+    if (options.classList.contains("visible")) {
+      // Switch to table view
+      options.classList.remove("visible");
+      options.classList.add("hidden");
+      tableContainer.classList.remove("hidden");
+      tableContainer.classList.add("visible");
     } else {
-      options.style.display = "none";
-      tableContainer.style.display = "block";
+      // Switch to options view
+      tableContainer.classList.remove("visible");
+      tableContainer.classList.add("hidden");
+      options.classList.remove("hidden");
+      options.classList.add("visible");
     }
   });
 });
@@ -156,8 +162,12 @@ function saveTableData(tabsArray) {
  */
 function loadSavedTable() {
   chrome.storage.local.get(["tabsData", "tableTitle"], (result) => {
-    if (result.tabsData && Array.isArray(result.tabsData)) {
+    const toggleViewBtn = document.getElementById("toggleViewBtn");
+    if (result.tabsData && Array.isArray(result.tabsData) && result.tabsData.length > 0) {
       renderTable(result.tabsData, result.tableTitle);
+      toggleViewBtn.style.display = "inline-block";
+    } else {
+      toggleViewBtn.style.display = "none";
     }
   });
 }
@@ -251,6 +261,14 @@ tableFileInput.addEventListener('change', (event) => {
       // Render the table and persist the data
       renderTable(data.tabs, file.name);
       saveTableData(data.tabs);
+      // Automatically switch to table view
+      const optionsContainer = document.getElementById("optionsContainer");
+      const tableContainer = document.getElementById("tabsTableContainer");
+      optionsContainer.classList.remove("visible");
+      optionsContainer.classList.add("hidden");
+      tableContainer.classList.remove("hidden");
+      tableContainer.classList.add("visible");
+      document.getElementById("toggleViewBtn").style.display = "inline-block";
     } catch (error) {
       console.error("Error parsing JSON:", error);
       alert(chrome.i18n.getMessage("parseError"));

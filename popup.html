@@ -66,11 +66,6 @@
       display: none;
     }
     /* Table styling with stripes */
-    #tabsTableContainer {
-      position: relative;
-      margin-top: 20px;
-      display: none;
-    }
     #tabsTableContainer table {
       width: 100%;
       border-collapse: collapse;
@@ -101,21 +96,43 @@
       font-weight: bold;
       cursor: pointer;
     }
+    /* Transition styles for view containers */
+    .view {
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-10px);
+      position: absolute;
+      width: 100%;
+    }
+    .visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+      position: relative;
+      width: 100%;
+    }
+    /* Ensure table title is visible by adding top margin */
+    #tabsTableContainer.visible {
+      margin-top: 20px;
+    }
   </style>
   <script src="i18n.js"></script>
 </head>
 <body>
   <div class="container">
     <h2 id="title">__MSG_extensionName__</h2>
-    <button id="toggleViewBtn">__MSG_toggleView__</button>
-    <div id="optionsContainer">
+    <button id="toggleViewBtn" style="display:none;">__MSG_toggleView__</button>
+    <div id="optionsContainer" class="view visible">
       <button id="backupBtn">__MSG_backup__</button>
       <label for="fileInput">__MSG_restore__</label>
       <input type="file" id="fileInput" accept=".json">
       <button id="loadTabsBtn">__MSG_loadTabs__</button>
       <input type="file" id="tableFileInput" accept=".json">
     </div>
-    <div id="tabsTableContainer"></div>
+    <div id="tabsTableContainer" class="view hidden"></div>
   </div>
   <script src="popup.js"></script>
 </body>
